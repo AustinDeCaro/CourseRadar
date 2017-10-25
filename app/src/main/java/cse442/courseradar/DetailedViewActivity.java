@@ -1,6 +1,7 @@
 package cse442.courseradar;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -252,6 +254,16 @@ public class DetailedViewActivity extends AppCompatActivity {
                                 if (numReviews == countReviews) {
                                     ReviewInfoAdapter reviewInfoAdapter = new ReviewInfoAdapter(DetailedViewActivity.this, reviewInfos);
                                     lvReviewsList.setAdapter(reviewInfoAdapter);
+                                    lvReviewsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                            Dialog dialog = new Dialog(DetailedViewActivity.this);
+                                            dialog.setContentView(R.layout.review_detail_popup);//popup view is the layout you created
+                                            TextView txt = (TextView)dialog.findViewById(R.id.tv_full_comment);
+                                            txt.setText(reviewInfos.get(i).getComment());
+                                            dialog.show();
+                                        }
+                                    });
                                     reviewListReady();
                                 }
                             }
