@@ -49,6 +49,7 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -466,12 +467,21 @@ public class DrawerActivity extends AppCompatActivity
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }
+                try {
+                    FileOutputStream fout = new FileOutputStream(imageFile);
+                    resized.compress(Bitmap.CompressFormat.JPEG, 50, fout);
+                    fout.flush();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                Uri image = Uri.fromFile(imageFile);
 
                 /* upload image uri to firebase storage and name the image file by user UBIT and save it in avatar folder */
                 StorageReference filepath = firebaseStorage.child("avatar/").child(userUBIT);
-                String newBitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(), resized, userUBIT, null);
-                filepath.putFile(Uri.parse(newBitmapPath));
-//                imageFile.renameTo(new File(cacheFilePath, userUBIT + ".jpeg"));
+//                String newBitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(), resized, null, null);
+//                filepath.putFile(Uri.parse(newBitmapPath));
+                filepath.putFile(image);
                 setFromLocal = true;
                 break;
         }
